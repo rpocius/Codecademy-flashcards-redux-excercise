@@ -1,26 +1,37 @@
-import { createSlice, createAction } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
+import { addQuiz } from '../quizzes/quizzesSlice';
 
+const initialState = {
+    topics: {},
+};
 
 export const topicsSlice = createSlice({
     name: 'topics',
-    initialState: {
-        topics: {},
-    },
+    initialState,
     reducers: {
         addTopic: (state, action) => {
-            state.topics[action.payload.id] = {
-                id: action.payload.id,
-                name: action.payload.name,
-                icon: action.payload.icon,
+            const { id, name, icon } = action.payload;
+            state.topics[id] = {
+                id,
+                name,
+                icon,
                 quizIds: []
             };
         },
-        addTopicQuiz: (state, action) => {
-            state.topics[action.payload.topicId].quizIds.push(action.payload.quizIds); 
-        }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(addQuiz, (state, action) => {
+            const { id, topicId } = action.payload;
+            const topic = state.topics[topicId];
+            if (topic) {
+                topic.quizIds.push(id);
+            }
+        })
     }
 });
 
+export const { addTopic } = topicsSlice.actions;
+
 export const selectTopics = (state) => state.topics.topics;
-export const { addTopic, addTopicQuiz } = topicsSlice.actions;
+
 export default topicsSlice.reducer;
