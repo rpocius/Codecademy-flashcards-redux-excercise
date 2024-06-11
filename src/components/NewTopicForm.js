@@ -4,8 +4,8 @@ import {useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import ROUTES from "../app/routes";
 import { ALL_ICONS } from "../data/icons";
-import { addTopic } from '../features/topics/topicsSlice';
 // import addTopic
+import { addTopic } from "../features/topics/topicsSlice";
 
 export default function NewTopicForm() {
   const dispatch = useDispatch();
@@ -20,12 +20,9 @@ export default function NewTopicForm() {
     }
 
     // dispatch new topic
-    dispatch(addTopic({
-      name: name,
-      icon: icon,
-      id: uuidv4()
-    }));
-
+    dispatch(addTopic({ id: uuidv4(), name, icon }));
+    
+    // Navigate to the topic page
     navigate(ROUTES.topicsRoute());
   };
 
